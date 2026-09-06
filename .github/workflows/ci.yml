@@ -14,5 +14,5 @@ jobs:
         run: echo "Welcome to the 1st Job"
     
       - name: Checking the Date
-        run: $Date
+        run: date
       
