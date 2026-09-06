@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Testing the hello world script
         run: echo "Welcome to the 1st Job"
-    steps:
+    
       - name: Checking the Date
         run: $Date
       
