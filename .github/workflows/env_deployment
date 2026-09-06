@@ -1,0 +1,33 @@
+
+name:  Deploying application based on environment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Deployment:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        environment:
+          - dev
+          - qa
+          - prod
+          - release
+        include: 
+          - environment: dev
+            app_url: dev.dim.com
+          - environment: qa
+            app_url: qa.dim.com
+          - environment: prod
+            app_url: prod.dim.com
+
+
+    steps:
+      - name: Deployment to different environment
+        run: echo "Deploying to ${{ matrix.environment }}"
+        echo "Application URL: ${{ matrix.app_url }}"  
+        echo "Deploying application to ${{ matrix.app_url }}"
