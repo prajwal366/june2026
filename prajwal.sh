@@ -4,7 +4,7 @@ echo "It is for testing the file"
 
 echo "$(date +"%Y-%m-%d")"
 
-echo "$(HOME)"
+echo "$(JENKINS_HOME)"
 
 
 
