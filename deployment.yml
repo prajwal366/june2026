@@ -1,0 +1,16 @@
+project: default
+source:
+  repoURL: https://github.com/prajwal366/june2026.git
+  path: ./
+  targetRevision: HEAD
+destination:
+  server: https://kubernetes.default.svc
+  namespace: june-2026-ns
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+    enabled: true
+  syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
