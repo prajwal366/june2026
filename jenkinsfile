@@ -1,0 +1,59 @@
+
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build and JUnit Test') {
+            steps {
+                sh 'mvn clean verify'
+            }
+
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('SonarQube Scan') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+
+        stage('Deploy to EC2') {
+            when {
+                branch 'main'
+            }
+
+            steps {
+                sshagent(credentials: ['ec2-ssh-key']) {
+
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST \
+                        "mkdir -p /home/ubuntu/myapp"
+
+                        scp -o StrictHostKeyChecking=no \
+                        target/jenkins-demo.jar \
+                        ubuntu@$EC2_HOST:/home/ubuntu/myapp/
+
+                        ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "
+                        pkill -f jenkins-demo.jar || true
+                        nohup java -jar /home/ubuntu/myapp/jenkins-demo.jar \
+                        > /home/ubuntu/myapp/app.log 2>&1 < /dev/null &
+                        "
+                    '''
+                }
+            }
+        }
+    }
+}
