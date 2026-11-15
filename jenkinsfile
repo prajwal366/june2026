@@ -39,14 +39,14 @@ pipeline {
                 sshagent(credentials: ['ec2-ssh-key']) {
 
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST \
+                        ssh -o StrictHostKeyChecking=no ubuntu@43.205.210.125 \
                         "mkdir -p /home/ubuntu/myapp"
 
                         scp -o StrictHostKeyChecking=no \
                         target/jenkins-demo.jar \
-                        ubuntu@$EC2_HOST:/home/ubuntu/myapp/
+                        ubuntu@43.205.210.125:/home/ubuntu/myapp/
 
-                        ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "
+                        ssh -o StrictHostKeyChecking=no ubuntu@43.205.210.125 "
                         pkill -f jenkins-demo.jar || true
                         nohup java -jar /home/ubuntu/myapp/jenkins-demo.jar \
                         > /home/ubuntu/myapp/app.log 2>&1 < /dev/null &
